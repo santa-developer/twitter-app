@@ -49,6 +49,39 @@ body {
   transition: all 0.3s ease-in-out;
 }
 
+// footer
+.footer {
+  position: fixed;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  color: $white;
+  background-color: transparent;
+  z-index: 10;
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    background-color: transparent;
+
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 16px;
+      font-size: 15px;
+      background-color: transparent;
+      backdrop-filter: blur(10px);
+      border: none;
+      cursor: pointer;
+    }
+  }
+}
+
 // home 레이아웃
 .home {
   &__title {
