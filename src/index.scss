@@ -1,0 +1,215 @@
+// 변수 정의
+$font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+$bacgkground: #1e293b;
+$activeBg: #3c495f;
+$white: #fff;
+$border: #708090;
+$primaryColor: #60a5fa;
+$primaryColorDark: #4272ad;
+$grayText: #9ca3af;
+$activeBorder: #3b82f6;
+$danger: #dc2626;
+$dangerDark: #9f2424;
+$gray: #6b7280;
+$grayDark: #3b424f;
+
+// 전체 레이아웃
+body {
+  font-family: $font;
+}
+
+* {
+  background-color: $bacgkground;
+  color: $white;
+
+  a {
+    background-color: inherit;
+  }
+}
+
+.layout {
+  position: relative;
+  max-width: 600px;
+  min-height: 100vh;
+  margin: 0 auto;
+  border-left: 1px solid $border;
+  border-right: 1px solid $border;
+}
+
+.button {
+  padding: 0.4rem 0.8rem;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: 100px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease-in-out;
+}
+
+// home 레이아웃
+.home {
+  &__title {
+    padding: 16px;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  &__tabs {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  &__tab {
+    padding: 16px;
+    text-align: center;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.4 ease-in-out;
+
+    &--active {
+      border-bottom: 2px solid $activeBorder;
+      font-weight: 700;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $activeBg;
+    }
+  }
+}
+
+.post-form {
+  &__textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 16px;
+    font-size: 18px;
+    font-family: $font;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid $border;
+    resize: none;
+    outline: none;
+
+    &::placeholder {
+      font-size: 18px;
+      color: $grayText;
+    }
+  }
+
+  &__submit-area {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid $border;
+
+    .post-form__file {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 1rem;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+  }
+
+  &__submit-btn {
+    @extend .button;
+    padding: 0.5rem 1rem;
+    background-color: $primaryColor;
+
+    &:hover {
+      background-color: $primaryColorDark;
+    }
+  }
+}
+
+// post 레이아웃
+.post {
+  padding-bottom: 40px;
+
+  &__flex {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+
+  &__email,
+  &__createdAt {
+    font-size: 12px;
+    color: $grayText;
+  }
+
+  &__box {
+    padding: 10px 0;
+    border-bottom: 1px solid $border;
+
+    a {
+      text-decoration: none;
+    }
+
+    &-profile {
+      padding: 0 10px;
+      text-decoration: none;
+
+      &-img,
+      &-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        border-radius: 50%;
+      }
+    }
+
+    &-content {
+      display: block;
+      padding: 16px 4px;
+      font-weight: 500;
+    }
+
+    &-footer {
+      display: flex;
+      flex-direction: row-reverse;
+      gap: 8px;
+      padding: 0 16px;
+      margin-top: 10px;
+      font-size: 14px;
+
+      button {
+        @extend .button;
+
+        &.post__delete {
+          background-color: $danger;
+
+          &:hover,
+          &:focus {
+            background-color: $dangerDark;
+          }
+        }
+
+        &.post__edit {
+          background-color: $gray;
+
+          &:hover,
+          &:focus {
+            background-color: $grayDark;
+          }
+        }
+
+        &.post__likes,
+        &.post__comments {
+          @extend .post__flex;
+          &:hover,
+          &:focus {
+            color: $gray;
+          }
+        }
+      }
+    }
+  }
+}
