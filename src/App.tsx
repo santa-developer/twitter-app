@@ -1,4 +1,5 @@
 import Layout from "components/Layout";
+import Loader from "components/loader/Loader";
 import Router from "components/Router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "firebaseApp";
@@ -27,7 +28,7 @@ function App() {
     <Layout>
       <ToastContainer />
       {/* 상태값이 변경이 됐는지 안됐는지 확인 후에 Router를 보여줌 */}
-      {init ? <Router isAuth={isAuth} /> : <>loading...</>}
+      {init ? <Router isAuth={isAuth} /> : <Loader />}
     </Layout>
   );
 }
