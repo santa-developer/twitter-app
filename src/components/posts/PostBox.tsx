@@ -4,15 +4,27 @@ import { useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "firebaseApp";
+import { toast } from "react-toastify";
 
 interface PostBoxProps {
   post: PostProps;
 }
 const PostBox = ({ post }: PostBoxProps) => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   // 게시글 삭제 이벤트
-  const handleDelete = () => {};
+  const handleDelete = async () => {
+    const confirm = window.confirm("게시글을 삭제하시겠습니까?");
+    if (confirm) {
+      await deleteDoc(doc(db, "posts", post.id));
+
+      toast.success("게시글을 삭제하였습니다.");
+      navigate("/");
+    }
+  };
   return (
     <div className='post__box' key={post?.id}>
       <Link to={`/posts/${post.id}`}>
@@ -49,7 +61,7 @@ const PostBox = ({ post }: PostBoxProps) => {
           </>
         )}
 
-        <button type='button' className='post__likes' onClick={handleDelete}>
+        <button type='button' className='post__likes'>
           <FaHeart /> {post?.likes || 0}
         </button>
         <button type='button' className='post__comments'>
