@@ -183,7 +183,17 @@ body {
 // post 레이아웃
 .post {
   padding-bottom: 40px;
+  &__no-posts {
+    padding: 20px;
 
+    .post__text {
+      padding: 16px;
+      font-size: 14px;
+      border: 1px solid $gray;
+      border-radius: 4px;
+      text-align: center;
+    }
+  }
   &__flex {
     display: flex;
     gap: 4px;
