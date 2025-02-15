@@ -183,6 +183,19 @@ body {
 // post 레이아웃
 .post {
   padding-bottom: 40px;
+
+  &__header {
+    button {
+      padding: 16px;
+      border: none;
+    }
+
+    &-btn {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+  }
   &__no-posts {
     padding: 20px;
 
