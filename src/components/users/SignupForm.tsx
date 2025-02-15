@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+} from "firebase/auth";
 import { app } from "firebaseApp";
 import { toast } from "react-toastify";
 
@@ -63,6 +69,31 @@ const SignupForm = () => {
       toast.error(error.message);
     }
   };
+
+  // sns 회원가입 이벤트
+  const handleSnsSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      const target = e.target as HTMLButtonElement;
+      const { name } = target;
+
+      const auth = getAuth(app);
+      let provider;
+
+      if (name === "google") {
+        provider = new GoogleAuthProvider();
+      } else if (name === "github") {
+        provider = new GithubAuthProvider();
+      } else {
+        throw new Error("지원되지 않는 로그인입니다.");
+      }
+
+      await signInWithPopup(auth, provider);
+      toast.success("로그인 하였습니다.");
+    } catch (error) {
+      const errorMsg = (error as Error).message;
+      toast.error(errorMsg);
+    }
+  };
   return (
     <form className='form form--lg' onSubmit={onsubmit}>
       <div className='form__title'>회원가입</div>
@@ -110,13 +141,33 @@ const SignupForm = () => {
           로그인
         </Link>
       </div>
-      <div className='form__block'>
+      <div className='form__block--lg'>
         <button
           type='submit'
           className='form__btn--submit'
           disabled={error?.length > 0}
         >
           회원가입
+        </button>
+      </div>
+      <div className='form__block'>
+        <button
+          type='button'
+          name='google'
+          className='form__btn--google'
+          onClick={handleSnsSignup}
+        >
+          Google로 회원가입
+        </button>
+      </div>
+      <div className='form__block'>
+        <button
+          type='button'
+          name='github'
+          className='form__btn--github'
+          onClick={handleSnsSignup}
+        >
+          Github로 회원가입
         </button>
       </div>
     </form>

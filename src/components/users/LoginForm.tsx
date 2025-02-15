@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { app } from "firebaseApp";
 import { toast } from "react-toastify";
 
@@ -50,6 +56,30 @@ const LoginForm = () => {
       toast.error(error.message);
     }
   };
+  // sns 로그인 이벤트
+  const handleSnsLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    try {
+      const target = e.target as HTMLButtonElement;
+      const { name } = target;
+
+      const auth = getAuth(app);
+      let provider;
+
+      if (name === "google") {
+        provider = new GoogleAuthProvider();
+      } else if (name === "github") {
+        provider = new GithubAuthProvider();
+      } else {
+        throw new Error("지원되지 않는 로그인입니다.");
+      }
+
+      await signInWithPopup(auth, provider);
+      toast.success("로그인 하였습니다.");
+    } catch (error) {
+      const errorMsg = (error as Error).message;
+      toast.error(errorMsg);
+    }
+  };
   return (
     <form className='form form--lg' onSubmit={onsubmit}>
       <div className='form__title'>로그인</div>
@@ -93,6 +123,26 @@ const LoginForm = () => {
           disabled={error?.length > 0}
         >
           로그인
+        </button>
+      </div>
+      <div className='form__block'>
+        <button
+          type='button'
+          name='google'
+          className='form__btn--google'
+          onClick={handleSnsLogin}
+        >
+          Google로 로그인
+        </button>
+      </div>
+      <div className='form__block'>
+        <button
+          type='button'
+          name='github'
+          className='form__btn--github'
+          onClick={handleSnsLogin}
+        >
+          Github로 로그인
         </button>
       </div>
     </form>
