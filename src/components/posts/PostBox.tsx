@@ -1,4 +1,6 @@
+import AuthContext from "context/AuthContext";
 import { PostProps } from "pages/home";
+import { useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
@@ -8,6 +10,7 @@ interface PostBoxProps {
   post: PostProps;
 }
 const PostBox = ({ post }: PostBoxProps) => {
+  const { user } = useContext(AuthContext);
   // 게시글 삭제 이벤트
   const handleDelete = () => {};
   return (
@@ -31,15 +34,21 @@ const PostBox = ({ post }: PostBoxProps) => {
         </div>
       </Link>
       <div className='post__box-footer'>
-        {/* post.uid === user.uid 일 때 */}
-        <>
-          <button type='button' className='post__delete' onClick={handleDelete}>
-            Delete
-          </button>
-          <button type='button' className='post__edit'>
-            <Link to={`/posts/edit/${post?.id}`}>Edit</Link>
-          </button>
-        </>
+        {user?.uid === post?.uid && (
+          <>
+            <button
+              type='button'
+              className='post__delete'
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+            <button type='button' className='post__edit'>
+              <Link to={`/posts/edit/${post?.id}`}>Edit</Link>
+            </button>
+          </>
+        )}
+
         <button type='button' className='post__likes' onClick={handleDelete}>
           <FaHeart /> {post?.likes || 0}
         </button>
