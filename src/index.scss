@@ -215,6 +215,7 @@ body {
   &__submit-area {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 0.75rem 1rem;
     border-bottom: 1px solid $border;
 
@@ -230,6 +231,26 @@ body {
     }
   }
 
+  &__image-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  &__attachment {
+    display: flex;
+    align-items: end;
+    gap: 16px;
+  }
+  &__clear-btn {
+    @extend .button;
+    padding: 2px 12px;
+    background-color: $danger;
+
+    &:hover,
+    &:focus {
+      background-color: $dangerDark;
+    }
+  }
   &__submit-btn {
     @extend .button;
     padding: 0.5rem 1rem;
@@ -305,6 +326,15 @@ body {
       display: block;
       padding: 16px 4px;
       font-weight: 500;
+    }
+
+    &-image-div {
+      padding: 15px;
+      text-align: center;
+    }
+    &-image {
+      max-width: 80%;
+      height: auto;
     }
 
     &-footer {
