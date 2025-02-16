@@ -6,8 +6,9 @@ import { FaHeart } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "firebaseApp";
+import { db, storage } from "firebaseApp";
 import { toast } from "react-toastify";
+import { deleteObject, ref } from "firebase/storage";
 
 interface PostBoxProps {
   post: PostProps;
@@ -15,10 +16,19 @@ interface PostBoxProps {
 const PostBox = ({ post }: PostBoxProps) => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const imageRef = ref(storage, post?.imageUrl); // 삭제할 이미지 url 참조
   // 게시글 삭제 이벤트
   const handleDelete = async () => {
     const confirm = window.confirm("게시글을 삭제하시겠습니까?");
     if (confirm) {
+      //storage에 등록된 이미지 먼저 삭제
+
+      if (post?.imageUrl) {
+        deleteObject(imageRef).catch(() => {
+          toast.error("");
+        });
+      }
+
       await deleteDoc(doc(db, "posts", post.id));
 
       toast.success("게시글을 삭제하였습니다.");
