@@ -44,6 +44,15 @@ const PostBox = ({ post }: PostBoxProps) => {
             <div className='post__createdAt'> {post?.createdAt}</div>
           </div>
           <div className='post__box-content'>{post?.content}</div>
+          {post?.imageUrl && (
+            <div className='post__box-image-div'>
+              <img
+                src={post?.imageUrl}
+                alt='post-image'
+                className='post__box-image'
+              />
+            </div>
+          )}
           <div className='post-form__hashtags-outputs'>
             {post?.hashTags?.map((tag, idx) => (
               <span className='post-form__hashtags-tag' key={idx}>
