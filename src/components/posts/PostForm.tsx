@@ -1,17 +1,39 @@
 import { useContext, useState } from "react";
 import { FiImage } from "react-icons/fi";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "firebaseApp";
+import { db, storage } from "firebaseApp";
 import { toast } from "react-toastify";
 import AuthContext from "context/AuthContext";
+import { v4 as uuidv4 } from "uuid";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 const PostForm = () => {
   const [content, setContent] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
   const [hashTag, sethashTag] = useState<string>("");
+  const [imageFile, setImageFile] = useState<string | null>(null);
+  const [isImageSubmitting, setIsImageSubmitting] = useState<boolean>(false);
   const { user } = useContext(AuthContext);
   // 이미지 업로드 이벤트
-  const handleFileUpload = () => {};
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; // 파일을 가져옴
+
+    if (!file) return;
+
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    fileReader.onloadend = (e: ProgressEvent<FileReader>) => {
+      const fileReaderTarget = e.currentTarget as FileReader; // 타입 단언
+      const fileData = fileReaderTarget.result as string; // result는 string | ArrayBuffer | null
+      setImageFile(fileData);
+    };
+  };
+
+  // 이미지 삭제 이벤트
+  const handleDeleteImg = () => {
+    setImageFile(null);
+  };
 
   // 텍스트 입력 이벤트
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -25,8 +47,18 @@ const PostForm = () => {
 
   // 폼 제출 이벤트
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsImageSubmitting(true);
+    const key = `${user?.uid}/${uuidv4()}`;
+    const storageRef = ref(storage, key);
     e.preventDefault();
     try {
+      // 이미지 먼저 업로드
+      let imageUrl = "";
+      if (imageFile) {
+        const data = await uploadString(storageRef, imageFile, "data_url");
+        imageUrl = await getDownloadURL(data?.ref);
+      }
+
       await addDoc(collection(db, "posts"), {
         content: content,
         createdAt: new Date()?.toLocaleDateString("ko", {
@@ -37,12 +69,17 @@ const PostForm = () => {
         uid: user?.uid,
         email: user?.email,
         hashTags: tags,
+        imageUrl: imageUrl, // 업로드 된 이미지의 download url 업데이트
       });
       setContent("");
       setTags([]);
       sethashTag("");
       toast.success("게시글이 등록되었습니다.");
-    } catch (e) {}
+      setImageFile(null);
+      setIsImageSubmitting(false);
+    } catch (e) {
+      toast.error("게시글 등록 중에 문제가 발생했습니다.");
+    }
   };
 
   // keyup 이벤트
@@ -102,18 +139,45 @@ const PostForm = () => {
         />
       </div>
       <div className='post-form__submit-area'>
-        {/* htmlFor='file-input' */}
-        <label htmlFor='file-input' className='post-form__file'>
-          <FiImage className='post-form__file-icon' />
-        </label>
+        <div className='post-form__image-area'>
+          {/* htmlFor='file-input' */}
+          <label htmlFor='file-input' className='post-form__file'>
+            <FiImage className='post-form__file-icon' />
+          </label>
+          <input
+            type='file'
+            name='file-input'
+            id='file-input'
+            accept='image/*'
+            onChange={handleFileUpload}
+            className='hidden'
+          />
+          {imageFile && (
+            <div className='post-form__attachment'>
+              <img
+                src={imageFile}
+                alt='attachment'
+                width={200}
+                height={"auto"}
+              />
+              <button
+                className='post-form__clear-btn'
+                type='button'
+                onClick={handleDeleteImg}
+              >
+                X
+              </button>
+            </div>
+          )}
+        </div>
+
         <input
-          type='file'
-          name='file-input'
-          accept='image/*'
-          onChange={handleFileUpload}
-          className='hidden'
+          type='submit'
+          value='Tweet'
+          className='post-form__submit-btn'
+          disabled={isImageSubmitting}
         />
-        <input type='submit' value='Tweet' className='post-form__submit-btn' />
+        {/* disabled={isImageSubmitting} 이미지가 업로드 중일 때는 비활성화 (여러번 등록되는 것을 방지하기 위함) */}
       </div>
     </form>
   );
