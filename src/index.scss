@@ -151,6 +151,41 @@ body {
     }
   }
 
+  &__hashtags {
+    padding: 16px;
+    border-bottom: 1px solid $border;
+    &-outputs {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 1px;
+    }
+    &-tag {
+      padding: 3px 8px;
+      margin-right: 6px;
+      font-size: 14px;
+      color: $primaryColor;
+      border: 1px solid $primaryColor;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+
+      &:hover,
+      &:focus {
+        color: $activeBorder;
+        border: 1px solid $activeBorder;
+      }
+    }
+  }
+  &__input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 8px;
+    font-family: $font;
+    border: none;
+    outline: none;
+  }
+
   &__submit-area {
     display: flex;
     justify-content: space-between;
