@@ -2,10 +2,16 @@ import AuthContext from "context/AuthContext";
 import { PostProps } from "pages/home";
 import { useContext } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { FaRegCommentDots } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { doc, deleteDoc } from "firebase/firestore";
+import {
+  doc,
+  deleteDoc,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+} from "firebase/firestore";
 import { db, storage } from "firebaseApp";
 import { toast } from "react-toastify";
 import { deleteObject, ref } from "firebase/storage";
@@ -36,6 +42,24 @@ const PostBox = ({ post }: PostBoxProps) => {
     }
   };
 
+  // 좋아요 이벤트
+  const toggleLikeBtn = async () => {
+    const postRef = doc(db, "posts", post.id);
+
+    if (user?.uid && post?.likes?.includes(user?.uid)) {
+      //사용자가 좋아요를 누른 경우 -> 좋아요 취소
+      await updateDoc(postRef, {
+        likes: arrayRemove(user?.uid),
+        likeCount: post?.likeCount ? post?.likeCount - 1 : 0,
+      });
+    } else {
+      // 사용자의 좋아요가 없는 경우 -> 좋아요를 추가한다.}
+      await updateDoc(postRef, {
+        likes: arrayUnion(user?.uid),
+        likeCount: post?.likeCount ? post?.likeCount + 1 : 1,
+      });
+    }
+  };
   return (
     <div className='post__box' key={post?.id}>
       <Link to={`/posts/${post.id}`}>
@@ -88,11 +112,16 @@ const PostBox = ({ post }: PostBoxProps) => {
           </>
         )}
 
-        <button type='button' className='post__likes'>
-          <FaHeart /> {post?.likes || 0}
+        <button type='button' className='post__likes' onClick={toggleLikeBtn}>
+          {user && post?.likes?.includes(user.uid) ? (
+            <FaHeart size={15} />
+          ) : (
+            <FaRegHeart size={15} />
+          )}
+          {post?.likeCount || 0}
         </button>
         <button type='button' className='post__comments'>
-          <FaRegCommentDots /> {post?.comments?.length || 0}
+          <FaRegCommentDots size={15} /> {post?.comments?.length || 0}
         </button>
       </div>
     </div>
