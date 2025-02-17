@@ -204,12 +204,14 @@ body {
     }
   }
   &__input {
+    display: inline-block;
     width: 100%;
     padding: 8px;
     margin-top: 8px;
     font-family: $font;
     border: none;
     outline: none;
+    box-sizing: border-box;
   }
 
   &__submit-area {
@@ -258,6 +260,27 @@ body {
 
     &:hover {
       background-color: $primaryColorDark;
+    }
+  }
+
+  &__profile {
+    padding: 16px;
+
+    .post-form__input {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 8px 2px;
+      border-bottom: 1px solid $gray;
+      font-size: 16px;
+
+      &:active,
+      &:focus {
+        border-bottom: 1px solid white;
+      }
+    }
+
+    .post-form__attachment img {
+      border-radius: 50%;
     }
   }
 }
@@ -479,11 +502,18 @@ body {
 // 프로필 레이아웃
 .profile {
   display: flex;
-  padding: 0 1rem;
-  margin-top: 2.5rem;
   justify-content: space-between;
   align-items: center;
+  padding: 0 15px 20px;
+  margin-top: 2.5rem;
 
+  &__box {
+    display: flex;
+    align-items: flex-end;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+  }
   &__flex {
     display: flex;
     gap: 8px;
@@ -530,6 +560,5 @@ body {
   &__email {
     font-size: 14px;
     color: $grayText;
-    margin-bottom: 4px;
   }
 }
