@@ -32,7 +32,6 @@ const PostEditForm = () => {
   console.log(imageFile);
   // 이미지 업로드 이벤트
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("asdasd");
     const file = e.target.files?.[0]; // 파일을 가져옴
 
     if (!file) return;
