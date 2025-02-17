@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import { db } from "firebaseApp";
 import { doc, getDoc } from "firebase/firestore";
 import BackBtn from "components/posts/BackBtn";
+import CommentForm from "components/comments/CommentForm";
 
 const PostDetail = () => {
   const [post, setPost] = useState<PostProps | null>(null);
@@ -28,7 +29,14 @@ const PostDetail = () => {
   return (
     <div className='post'>
       <BackBtn />
-      {post ? <PostBox post={post} /> : <Loader />}
+      {post ? (
+        <>
+          <PostBox post={post} />
+          <CommentForm post={post} />
+        </>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };
