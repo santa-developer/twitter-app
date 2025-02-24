@@ -78,7 +78,7 @@ const PostBox = ({ post }: PostBoxProps) => {
             <FaUserCircle className='post__box-profile-icon' />
           )}
           <div className='post__flex--between'>
-            <div className='post__flex'>
+            <div className='post__flex post__mobile-flex'>
               <div className='post__email'>{post?.email}</div>
               <div className='post__createdAt'> {post?.createdAt}</div>
             </div>

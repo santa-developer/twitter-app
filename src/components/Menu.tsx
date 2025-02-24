@@ -33,24 +33,30 @@ const MenuList = () => {
     <div className='footer'>
       <div className='footer__grid'>
         <button type='button' onClick={() => navigate("/")}>
-          <LuHouse /> {t("MENU_HOME")}
+          <LuHouse />
+          <span className='footer__grid--text'>{t("MENU_HOME")}</span>
         </button>
         <button type='button' onClick={() => navigate("/profile")}>
-          <FaRegUserCircle /> {t("MENU_PROFILE")}
+          <FaRegUserCircle />
+          <span className='footer__grid--text'>{t("MENU_PROFILE")}</span>
         </button>
         <button type='button' onClick={() => navigate("/search")}>
-          <IoSearch /> {t("MENU_SEARCH")}
+          <IoSearch />
+          <span className='footer__grid--text'>{t("MENU_SEARCH")}</span>
         </button>
         <button type='button' onClick={() => navigate("/notifications")}>
-          <IoNotificationsOutline /> {t("MENU_NOTI")}
+          <IoNotificationsOutline />
+          <span className='footer__grid--text'>{t("MENU_NOTI")}</span>
         </button>
         {user === null ? (
           <button type='button' onClick={() => navigate("/users/login")}>
-            <TbLogin /> {t("MENU_LOGIN")}
+            <TbLogin />
+            <span className='footer__grid--text'>{t("MENU_LOGIN")}</span>
           </button>
         ) : (
           <button type='button' onClick={handleLogout}>
-            <TbLogout /> {t("MENU_LOGOUT")}
+            <TbLogout />
+            <span className='footer__grid--text'>{t("MENU_LOGOUT")}</span>
           </button>
         )}
       </div>

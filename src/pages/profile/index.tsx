@@ -77,7 +77,7 @@ const ProfilePage = () => {
               alt='profile'
               className='profile__image'
             />
-            <div className='profile__Text'>
+            <div className='profile__text'>
               <div className='profile__name'>
                 {user?.displayName || t("PROFILE_NAME")}
               </div>
