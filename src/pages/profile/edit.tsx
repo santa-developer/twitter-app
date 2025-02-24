@@ -13,6 +13,7 @@ import { FiImage } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
+import useTranslation from "hooks/useTranslation";
 
 const STORAGE_DOWNLOAD_URL_STR = "https://firebasestorage.googleapis.com";
 
@@ -21,6 +22,7 @@ const ProfileEdit = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const t = useTranslation();
 
   // 입력 값 변경 이벤트
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,15 +87,15 @@ const ProfileEdit = () => {
           photoURL: newImageUrl || "",
         })
           .then(() => {
-            toast.success("프로필이 수정되었습니다.");
+            toast.success(t("ALERT_EDIT_PROFILE"));
             navigate("/profile");
           })
           .catch((error) => {
-            toast.error("프로필 수정에 실패했습니다.");
+            toast.error(t("ALERT_EDIT_PROFILE_ERROR"));
           });
       }
     } catch (e) {
-      toast.error("프로필 수정 중 에러가 발생했습니다.");
+      toast.error(t("ALERT_EDIT_PROFILE_ERROR"));
     }
   };
 
@@ -115,7 +117,7 @@ const ProfileEdit = () => {
             type='text'
             name='displayName'
             className='post-form__input'
-            placeholder='이름'
+            placeholder={t("NAME_PLACEHOLDER")}
             value={displayName}
             onChange={onChange}
           />
@@ -152,7 +154,7 @@ const ProfileEdit = () => {
             />
             <input
               type='submit'
-              value='프로필 수정'
+              value={t("BUTTON_EDIT_PROFILE")}
               className='post-form__submit-btn'
             />
           </div>

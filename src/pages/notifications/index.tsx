@@ -8,6 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "firebaseApp";
+import useTranslation from "hooks/useTranslation";
 import { useContext, useEffect, useState } from "react";
 
 export interface notificationsProps {
@@ -21,6 +22,8 @@ export interface notificationsProps {
 const NotificationsPage = () => {
   const { user } = useContext(AuthContext);
   const [notifications, setNotifications] = useState<notificationsProps[]>([]);
+
+  const t = useTranslation();
 
   useEffect(() => {
     if (user) {
@@ -45,7 +48,7 @@ const NotificationsPage = () => {
     <div className='home'>
       <div className='home__top'>
         <div className='home__title'>
-          <div className='home__title-text'></div>
+          <div className='home__title-text'>{t("MENU_NOTI")}</div>
         </div>
       </div>
       <div className='post'>
@@ -55,7 +58,7 @@ const NotificationsPage = () => {
           ))
         ) : (
           <div className='post__no-posts'>
-            <div className='post__text'>알림이 없습니다.</div>
+            <div className='post__text'>{t("NO_NOTIFICATIONS")}</div>
           </div>
         )}
       </div>

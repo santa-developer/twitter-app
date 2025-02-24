@@ -570,6 +570,29 @@ body {
       background-color: $activeBorder;
     }
 
+    &--lang {
+      @extend .button;
+      background-color: $grayText;
+
+      &:hover,
+      &:focus {
+        background-color: $gray;
+      }
+
+      .lang-btn {
+        display: flex;
+        background-color: transparent;
+        align-items: center;
+        span {
+          margin-left: 5px;
+          background-color: transparent;
+        }
+        svg {
+          background: transparent;
+        }
+      }
+    }
+
     &--language {
       @extend .button;
       background-color: $gray;

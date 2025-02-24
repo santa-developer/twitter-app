@@ -9,11 +9,13 @@ import AuthContext from "context/AuthContext";
 import { getAuth, signOut } from "firebase/auth";
 import { app } from "firebaseApp";
 import { toast } from "react-toastify";
+import useTranslation from "hooks/useTranslation";
 
 const MenuList = () => {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { user } = useContext(AuthContext);
+  const t = useTranslation();
 
   // 로그아웃 이벤트
   const handleLogout = async () => {
@@ -21,7 +23,7 @@ const MenuList = () => {
       const auth = getAuth(app);
       await signOut(auth);
 
-      toast.success("로그아웃 되었습니다.");
+      toast.success(t("ALERT_LOGOUT"));
       navigate("/users/login");
     } catch (error: any) {
       toast.error(error.message);
@@ -31,24 +33,24 @@ const MenuList = () => {
     <div className='footer'>
       <div className='footer__grid'>
         <button type='button' onClick={() => navigate("/")}>
-          <LuHouse /> Home
+          <LuHouse /> {t("MENU_HOME")}
         </button>
         <button type='button' onClick={() => navigate("/profile")}>
-          <FaRegUserCircle /> Profile
+          <FaRegUserCircle /> {t("MENU_PROFILE")}
         </button>
         <button type='button' onClick={() => navigate("/search")}>
-          <IoSearch /> Search
+          <IoSearch /> {t("MENU_SEARCH")}
         </button>
         <button type='button' onClick={() => navigate("/notifications")}>
-          <IoNotificationsOutline /> Alert
+          <IoNotificationsOutline /> {t("MENU_NOTI")}
         </button>
         {user === null ? (
           <button type='button' onClick={() => navigate("/users/login")}>
-            <TbLogin /> LogIn
+            <TbLogin /> {t("MENU_LOGIN")}
           </button>
         ) : (
           <button type='button' onClick={handleLogout}>
-            <TbLogout /> Logout
+            <TbLogout /> {t("MENU_LOGOUT")}
           </button>
         )}
       </div>

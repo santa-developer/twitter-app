@@ -10,6 +10,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "firebaseApp";
+import useTranslation from "hooks/useTranslation";
 import { PostProps } from "pages/home";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -25,6 +26,8 @@ interface UserProps {
 const FollowingBox = ({ post }: FollowingProps) => {
   const { user } = useContext(AuthContext);
   const [postFollowers, setPostFollowers] = useState<any>([]);
+
+  const t = useTranslation();
 
   // 알림에 텍스트가 길 경우 텍스트 자르기
   const truncate = (str: string) => {
@@ -71,12 +74,12 @@ const FollowingBox = ({ post }: FollowingProps) => {
             uid: post?.uid,
             isRead: false,
             url: "#",
-            content: `${
-              user?.email || user?.displayName
-            }이(가) 회원님을 팔로우 했습니다.`,
+            content: `${user?.email || user?.displayName} ${t(
+              "ALERT_FOLLOW_YOU"
+            )}`,
           });
         }
-        toast.success("팔로우 하였습니다.");
+        toast.success(t("ALERT_FOLLOW"));
       }
     } catch (err) {}
   };
@@ -98,7 +101,7 @@ const FollowingBox = ({ post }: FollowingProps) => {
           users: arrayRemove({ id: user.uid }),
         });
 
-        toast.success("팔로우를 취소했습니다.");
+        toast.success(t("ALERT_UNFOLLOW"));
       }
     } catch (err) {}
   };
@@ -131,11 +134,11 @@ const FollowingBox = ({ post }: FollowingProps) => {
             className='post__following-btn'
             onClick={hanleDeleteFollow}
           >
-            Following
+            {t("BUTTON_FOLLOWING")}
           </button>
         ) : (
           <button className='post__follow-btn' onClick={handleFollow}>
-            Follower
+            {t("BUTTON_FOLLOW")}
           </button>
         ))}
     </>

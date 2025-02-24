@@ -10,12 +10,14 @@ import {
 } from "firebase/firestore";
 import AuthContext from "context/AuthContext";
 import { db } from "firebaseApp";
+import useTranslation from "hooks/useTranslation";
 
 const SearchPage = () => {
   const [posts, setPosts] = useState<PostProps[]>([]);
   const [tagQuery, setTagQuery] = useState<string>("");
   const { user } = useContext(AuthContext);
 
+  const t = useTranslation();
   // 검색 값 핸들링
   const onChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTagQuery(e.target.value.trim());
@@ -44,13 +46,13 @@ const SearchPage = () => {
     <div className='home'>
       <div className='home__top'>
         <div className='home__title'>
-          <div className='home__title-text'>Search</div>
+          <div className='home__title-text'>{t("MENU_SEARCH")}</div>
         </div>
         <div className='home__search-div'>
           <input
             type='text'
             className='home__search'
-            placeholder='해시태그 검색'
+            placeholder={t("SEARCH_HASHTAGS")}
             onChange={onChangeSearch}
           />
         </div>
@@ -60,7 +62,7 @@ const SearchPage = () => {
           posts?.map((post) => <PostBox post={post} key={post.id} />)
         ) : (
           <div className='post__no-posts'>
-            <div className='post__text'>검색 결과가 없습니다.</div>
+            <div className='post__text'>{t("ALERT_NO_SEARCH_LIST")}</div>
           </div>
         )}
       </div>

@@ -14,6 +14,7 @@ import {
   uploadString,
 } from "firebase/storage";
 import BackBtn from "./BackBtn";
+import useTranslation from "hooks/useTranslation";
 
 const PostEditForm = () => {
   const [content, setContent] = useState<string>("");
@@ -27,9 +28,7 @@ const PostEditForm = () => {
   const navigate = useNavigate();
   const imageRef = ref(storage, post?.imageUrl);
 
-  console.log(imageFile, "asdasd");
-
-  console.log(imageFile);
+  const t = useTranslation();
   // 이미지 업로드 이벤트
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; // 파일을 가져옴
@@ -87,7 +86,7 @@ const PostEditForm = () => {
 
     try {
       if (!post?.id) {
-        toast.error("게시글 정보를 찾을 수 없습니다.");
+        toast.error(t("ALERT_NO_POST"));
         return;
       }
 
@@ -106,8 +105,7 @@ const PostEditForm = () => {
         if (isImageChanged && post?.imageUrl) {
           const imageRef = ref(storage, post.imageUrl); // 기존 이미지 파일 참조
           await deleteObject(imageRef).catch((error) => {
-            console.error("기존 이미지 삭제 실패:", error);
-            toast.error("기존 이미지 삭제 중 오류가 발생했습니다.");
+            toast.error(t("ALERT_DELETE_IMG_ERROR"));
           });
         }
 
@@ -129,15 +127,15 @@ const PostEditForm = () => {
           imageUrl, // 새로운 이미지 URL 업데이트
         });
 
-        toast.success("게시글이 수정되었습니다.");
+        toast.success(t("ALERT_UPDATE_POST"));
         navigate(`/posts/${post.id}`);
       } else {
-        toast.info("수정된 내용이 없습니다.");
+        toast.info(t("ALERT_NO_CHANGE_CONTENT"));
       }
       // setImageFile(null);
       setIsImageSubmitting(false);
     } catch (error) {
-      toast.error("게시글 수정 중 오류가 발생했습니다.");
+      toast.error(t("ALERT_UPDATE_POST_ERROR"));
     }
   };
 
@@ -146,7 +144,7 @@ const PostEditForm = () => {
     if (e.keyCode === 32 && e.target.value.trim() !== "") {
       //태그를 생성해 주는데 같은 태그가 있다면 에러를 띄운다.
       if (tags?.includes(e.target.value?.trim())) {
-        toast.error("동일한 태그가 존재합니다.");
+        toast.error(t("ALERT_SAME_TAG"));
       } else {
         setTags((prev) => (prev?.length > 0 ? [...prev, hashTag] : [hashTag]));
         sethashTag("");
@@ -173,7 +171,7 @@ const PostEditForm = () => {
         <textarea
           name='content'
           id='content'
-          placeholder='What is happening?'
+          placeholder={t("POST_PLACEHOLDER")}
           className='post-form__textarea'
           required
           value={content}
@@ -195,7 +193,7 @@ const PostEditForm = () => {
             type='text'
             name='hashtag'
             id='hashtag'
-            placeholder='해시태그 + 스페이스바 입력'
+            placeholder={t("POST_HASHTAG")}
             className='post-form__input'
             onChange={onChangeHashTag}
             onKeyUp={handleKeyUp}
@@ -229,7 +227,7 @@ const PostEditForm = () => {
                   type='button'
                   onClick={handleDeleteImg}
                 >
-                  Clear
+                  X
                 </button>
               </div>
             )}

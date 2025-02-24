@@ -7,6 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "firebaseApp";
+import useTranslation from "hooks/useTranslation";
 import { PostProps } from "pages/home";
 import { useContext, useState } from "react";
 import { toast } from "react-toastify";
@@ -17,6 +18,7 @@ export interface CommentFormProps {
 
 const CommentForm = ({ post }: CommentFormProps) => {
   const { user } = useContext(AuthContext);
+  const t = useTranslation();
   const [comment, setComment] = useState<string>("");
 
   // 알림에 제목 내용이 길 경우 텍스트 자르기
@@ -65,13 +67,13 @@ const CommentForm = ({ post }: CommentFormProps) => {
             uid: post?.uid,
             isRead: false,
             url: `/posts/${post?.id}`,
-            content: `${truncate(
-              post?.content
-            )} 게시글에 댓글이 작성되었습니다.`,
+            content: t("ALERT_COMMENT_POST", {
+              postContent: truncate(post?.content),
+            }),
           });
         }
 
-        toast.success("댓글을 추가했습니다.");
+        toast.success(t("ALERT_COMMENT_ADD"));
         setComment("");
       } catch (e) {}
     }
@@ -85,14 +87,14 @@ const CommentForm = ({ post }: CommentFormProps) => {
         id='comment'
         value={comment}
         required
-        placeholder='Enter a comment.'
+        placeholder={t("COMMENT_PLACEHOLDER")}
         onChange={onChange}
       />
       <div className='post-form__submit-area'>
         <div />
         <input
           type='submit'
-          value='Comment'
+          value={t("BUTTON_COMMENT")}
           className='post-form__submit-btn'
           disabled={!comment}
         />

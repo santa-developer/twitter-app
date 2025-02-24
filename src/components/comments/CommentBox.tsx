@@ -6,6 +6,7 @@ import { arrayRemove, doc, updateDoc } from "firebase/firestore";
 import { db } from "firebaseApp";
 import { toast } from "react-toastify";
 import styles from "./Comment.module.scss";
+import useTranslation from "hooks/useTranslation";
 
 export interface CommentProps {
   comment: string;
@@ -20,11 +21,12 @@ interface CommentBoxProps {
 }
 const CommentBox = ({ data, post }: CommentBoxProps) => {
   const { user } = useContext(AuthContext);
+  const t = useTranslation();
 
   // 댓글 삭제 이벤트
   const handleDeleteComment = async () => {
     if (post) {
-      const confirm = window.confirm("댓글을 삭제하시겠습니까?");
+      const confirm = window.confirm(t("CONFIRM_DELETE_COMMENT"));
       if (confirm) {
         try {
           const postRef = doc(db, "posts", post?.id);
@@ -33,9 +35,9 @@ const CommentBox = ({ data, post }: CommentBoxProps) => {
             comments: arrayRemove(data),
           });
 
-          toast.success("댓글을 삭제했습니다.");
+          toast.success(t("ALERT_DELETE_COMMENT"));
         } catch (err) {
-          toast.error("댓글을 삭제하지 못했습니다.");
+          toast.error(t("ALERT_DELETE_COMMENT_ERROR"));
         }
       }
     }
@@ -58,7 +60,7 @@ const CommentBox = ({ data, post }: CommentBoxProps) => {
               className='comment__delete-btn'
               onClick={handleDeleteComment}
             >
-              Delete
+              {t("BUTTON_DELETE")}
             </button>
           )}
         </div>

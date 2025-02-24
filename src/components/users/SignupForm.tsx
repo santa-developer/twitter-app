@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { app } from "firebaseApp";
 import { toast } from "react-toastify";
+import useTranslation from "hooks/useTranslation";
 
 const SignupForm = () => {
   const [email, setEmail] = useState<string>("");
@@ -17,6 +18,7 @@ const SignupForm = () => {
   const [error, setError] = useState<string>("");
 
   const navigate = useNavigate();
+  const t = useTranslation();
 
   // 이벤트 변경 핸들러
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +32,7 @@ const SignupForm = () => {
         /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 
       if (!value?.match(emailRegEx)) {
-        setError("이메일 형식이 올바르지 않습니다.");
+        setError(t("ALERT_INVALID_EMAIL"));
       } else {
         setError("");
       }
@@ -38,9 +40,9 @@ const SignupForm = () => {
     if (name === "password") {
       setPassword(value);
       if (value?.length < 8) {
-        setError("비밀번호는 8자리 이상이어야 합니다.");
+        setError(t("ALERT_PASSWORD_LENGTH"));
       } else if (passwordConfirm?.length > 0 && value !== passwordConfirm) {
-        setError("비밀번호가 일치하지 않습니다.");
+        setError(t("ALERT_PASSWORD_NOT_MATCH"));
       } else {
         setError("");
       }
@@ -48,9 +50,9 @@ const SignupForm = () => {
     if (name === "password_confirm") {
       setPasswordConfirm(value);
       if (value?.length < 8) {
-        setError("비밀번호는 8자리 이상이어야 합니다.");
+        setError(t("ALERT_PASSWORD_LENGTH"));
       } else if (value !== password) {
-        setError("비밀번호가 일치하지 않습니다.");
+        setError(t("ALERT_PASSWORD_NOT_MATCH"));
       } else {
         setError("");
       }
@@ -63,7 +65,7 @@ const SignupForm = () => {
     try {
       const auth = getAuth(app);
       await createUserWithEmailAndPassword(auth, email, password);
-      toast.success("회원가입이 완료되었습니다.");
+      toast.success(t("ALERT_COMPLETE_REGISTRATION"));
       navigate("/");
     } catch (error: any) {
       toast.error(error.message);
@@ -84,11 +86,11 @@ const SignupForm = () => {
       } else if (name === "github") {
         provider = new GithubAuthProvider();
       } else {
-        throw new Error("지원되지 않는 로그인입니다.");
+        throw new Error(t("ALERT_UNSUPPORTED_LOGIN"));
       }
 
       await signInWithPopup(auth, provider);
-      toast.success("로그인 하였습니다.");
+      toast.success(t("ALERT_LOGIN"));
     } catch (error) {
       const errorMsg = (error as Error).message;
       toast.error(errorMsg);
@@ -96,9 +98,9 @@ const SignupForm = () => {
   };
   return (
     <form className='form form--lg' onSubmit={onsubmit}>
-      <div className='form__title'>회원가입</div>
+      <div className='form__title'>{t("MENU_SIGNUP")}</div>
       <div className='form__block'>
-        <label htmlFor='email'>이메일</label>
+        <label htmlFor='email'>{t("FORM_EMAIL")}</label>
         <input
           type='email'
           name='email'
@@ -109,7 +111,7 @@ const SignupForm = () => {
         />
       </div>
       <div className='form__block'>
-        <label htmlFor='password'>비밀번호</label>
+        <label htmlFor='password'>{t("FORM_PASSWORD")}</label>
         <input
           type='password'
           name='password'
@@ -120,7 +122,7 @@ const SignupForm = () => {
         />
       </div>
       <div className='form__block'>
-        <label htmlFor='password_confirm'>비밀번호 확인</label>
+        <label htmlFor='password_confirm'>{t("FORM_PASSWORD_CHECK")}</label>
         <input
           type='password'
           name='password_confirm'
@@ -136,9 +138,9 @@ const SignupForm = () => {
         </div>
       )}
       <div className='form__block'>
-        계정이 있으신가요?
+        {t("YES_ACCOUNT")}
         <Link to='/users/login' className='form__link'>
-          로그인
+          {t("MENU_LOGIN")}
         </Link>
       </div>
       <div className='form__block--lg'>
@@ -147,7 +149,7 @@ const SignupForm = () => {
           className='form__btn--submit'
           disabled={error?.length > 0}
         >
-          회원가입
+          {t("MENU_SIGNUP")}
         </button>
       </div>
       <div className='form__block'>
@@ -157,7 +159,7 @@ const SignupForm = () => {
           className='form__btn--google'
           onClick={handleSnsSignup}
         >
-          Google로 회원가입
+          {t("SIGNUP_GOOGLE")}
         </button>
       </div>
       <div className='form__block'>
@@ -167,7 +169,7 @@ const SignupForm = () => {
           className='form__btn--github'
           onClick={handleSnsSignup}
         >
-          Github로 회원가입
+          {t("SIGNUP_GITHUB")}
         </button>
       </div>
     </form>

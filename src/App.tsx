@@ -5,6 +5,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { app } from "firebaseApp";
 import { useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import { RecoilRoot } from "recoil";
 
 function App() {
   const auth = getAuth(app);
@@ -25,11 +26,13 @@ function App() {
     });
   }, [auth]); //auth 값이 바뀔 때 마다 호출
   return (
-    <Layout>
-      <ToastContainer theme='dark' autoClose={1000} newestOnTop />
-      {/* 상태값이 변경이 됐는지 안됐는지 확인 후에 Router를 보여줌 */}
-      {init ? <Router isAuth={isAuth} /> : <Loader />}
-    </Layout>
+    <RecoilRoot>
+      <Layout>
+        <ToastContainer theme='dark' autoClose={1000} newestOnTop />
+        {/* 상태값이 변경이 됐는지 안됐는지 확인 후에 Router를 보여줌 */}
+        {init ? <Router isAuth={isAuth} /> : <Loader />}
+      </Layout>
+    </RecoilRoot>
   );
 }
 

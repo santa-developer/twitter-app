@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import AuthContext from "context/AuthContext";
 import { v4 as uuidv4 } from "uuid";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import useTranslation from "hooks/useTranslation";
 
 const PostForm = () => {
   const [content, setContent] = useState<string>("");
@@ -14,6 +15,8 @@ const PostForm = () => {
   const [imageFile, setImageFile] = useState<string | null>(null);
   const [isImageSubmitting, setIsImageSubmitting] = useState<boolean>(false);
   const { user } = useContext(AuthContext);
+
+  const t = useTranslation();
   // 이미지 업로드 이벤트
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; // 파일을 가져옴
@@ -26,6 +29,7 @@ const PostForm = () => {
     fileReader.onloadend = (e: ProgressEvent<FileReader>) => {
       const fileReaderTarget = e.currentTarget as FileReader; // 타입 단언
       const fileData = fileReaderTarget.result as string; // result는 string | ArrayBuffer | null
+
       setImageFile(fileData);
     };
   };
@@ -74,11 +78,11 @@ const PostForm = () => {
       setContent("");
       setTags([]);
       sethashTag("");
-      toast.success("게시글이 등록되었습니다.");
+      toast.success(t("ALERT_REGIST_POST"));
       setImageFile(null);
       setIsImageSubmitting(false);
     } catch (e) {
-      toast.error("게시글 등록 중에 문제가 발생했습니다.");
+      toast.error(t("ALERT_REGIST_POST_ERROR"));
     }
   };
 
@@ -87,7 +91,7 @@ const PostForm = () => {
     if (e.keyCode === 32 && e.target.value.trim() !== "") {
       //태그를 생성해 주는데 같은 태그가 있다면 에러를 띄운다.
       if (tags?.includes(e.target.value?.trim())) {
-        toast.error("동일한 태그가 존재합니다.");
+        toast.error(t("ALERT_SAME_TAG"));
       } else {
         setTags((prev) => (prev?.length > 0 ? [...prev, hashTag] : [hashTag]));
         sethashTag("");
@@ -109,7 +113,7 @@ const PostForm = () => {
       <textarea
         name='content'
         id='content'
-        placeholder='What is happening?'
+        placeholder={t("POST_PLACEHOLDER")}
         className='post-form__textarea'
         required
         value={content}
@@ -131,7 +135,7 @@ const PostForm = () => {
           type='text'
           name='hashtag'
           id='hashtag'
-          placeholder='해시태그 + 스페이스바 입력'
+          placeholder={t("POST_HASHTAG")}
           className='post-form__input'
           onChange={onChangeHashTag}
           onKeyUp={handleKeyUp}

@@ -12,6 +12,10 @@ import { PostProps } from "pages/home";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileImage from "assets/images/user.png";
+import { MdOutlineLanguage } from "react-icons/md";
+import { useRecoilState } from "recoil";
+import { languageState } from "atom";
+import useTranslation from "hooks/useTranslation";
 
 type TabType = "my" | "like";
 const ProfilePage = () => {
@@ -19,9 +23,13 @@ const ProfilePage = () => {
   const [myPosts, setMyPosts] = useState<PostProps[]>([]);
   const [likePosts, setLikePosts] = useState<PostProps[]>([]);
 
+  const t = useTranslation();
+  const [lang, setLang] = useRecoilState(languageState);
+
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // console.log(lang);
   useEffect(() => {
     if (user) {
       let postsRef = collection(db, "posts");
@@ -52,10 +60,16 @@ const ProfilePage = () => {
       });
     }
   }, [user]);
+
+  // 한영 변환
+  const onClickLanguage = () => {
+    setLang(lang === "ko" ? "en" : "ko");
+    localStorage.setItem("language", lang === "ko" ? "en" : "ko");
+  };
   return (
     <div className='home'>
       <div className='home__top'>
-        <div className='home__title'>Profile</div>
+        <div className='home__title'>{t("MENU_PROFILE")}</div>
         <div className='profile'>
           <div className='profile__box'>
             <img
@@ -65,19 +79,30 @@ const ProfilePage = () => {
             />
             <div className='profile__Text'>
               <div className='profile__name'>
-                {user?.displayName || "사용자 님"}
+                {user?.displayName || t("PROFILE_NAME")}
               </div>
               <div className='profile__email'>{user?.email}</div>
             </div>
           </div>
-
-          <button
-            type='button'
-            className='profile__btn'
-            onClick={() => navigate("/profile/edit")}
-          >
-            프로필 수정
-          </button>
+          <div className='profile__flex'>
+            <button
+              type='button'
+              className='profile__btn'
+              onClick={() => navigate("/profile/edit")}
+            >
+              {t("BUTTON_EDIT_PROFILE")}
+            </button>
+            <button
+              type='button'
+              className='profile__btn--lang'
+              onClick={onClickLanguage}
+            >
+              <div className='lang-btn'>
+                <MdOutlineLanguage size='16' />
+                <span>{lang === "ko" ? "한국어" : "English"}</span>
+              </div>
+            </button>
+          </div>
         </div>
 
         <div className='home__tabs'>
@@ -86,7 +111,7 @@ const ProfilePage = () => {
             className={`home__tab ${activeTab === "my" && "home__tab--active"}`}
             onClick={() => setAtivedTab("my")}
           >
-            For You
+            {t("TAB_MY")}
           </div>
           <div
             className={`home__tab ${
@@ -94,7 +119,7 @@ const ProfilePage = () => {
             }`}
             onClick={() => setAtivedTab("like")}
           >
-            Likes
+            {t("TAB_LIKES")}
           </div>
         </div>
 
@@ -104,7 +129,7 @@ const ProfilePage = () => {
               myPosts?.map((post) => <PostBox post={post} key={post.id} />)
             ) : (
               <div className='post__no-posts'>
-                <div className='post__text'>게시글이 없습니다.</div>
+                <div className='post__text'>{t("NO_POSTS")}</div>
               </div>
             )}
           </div>
@@ -115,7 +140,7 @@ const ProfilePage = () => {
               likePosts?.map((post) => <PostBox post={post} key={post.id} />)
             ) : (
               <div className='post__no-posts'>
-                <div className='post__text'>게시글이 없습니다.</div>
+                <div className='post__text'>{t("NO_POSTS")}</div>
               </div>
             )}
           </div>
