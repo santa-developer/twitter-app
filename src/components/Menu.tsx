@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { LuHouse } from "react-icons/lu";
 import { FaRegUserCircle } from "react-icons/fa";
 import { TbLogout, TbLogin } from "react-icons/tb";
-import { IoSearch } from "react-icons/io5";
+import { IoSearch, IoNotificationsOutline } from "react-icons/io5";
 
 import { useContext } from "react";
 import AuthContext from "context/AuthContext";
@@ -38,6 +38,9 @@ const MenuList = () => {
         </button>
         <button type='button' onClick={() => navigate("/search")}>
           <IoSearch /> Search
+        </button>
+        <button type='button' onClick={() => navigate("/notifications")}>
+          <IoNotificationsOutline /> Alert
         </button>
         {user === null ? (
           <button type='button' onClick={() => navigate("/users/login")}>
