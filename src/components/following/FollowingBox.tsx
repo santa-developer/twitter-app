@@ -1,7 +1,9 @@
 import AuthContext from "context/AuthContext";
 import {
+  addDoc,
   arrayRemove,
   arrayUnion,
+  collection,
   doc,
   onSnapshot,
   setDoc,
@@ -23,6 +25,11 @@ interface UserProps {
 const FollowingBox = ({ post }: FollowingProps) => {
   const { user } = useContext(AuthContext);
   const [postFollowers, setPostFollowers] = useState<any>([]);
+
+  // 알림에 텍스트가 길 경우 텍스트 자르기
+  const truncate = (str: string) => {
+    return str.length > 10 ? str?.substring(0, 10) + "..." : str;
+  };
 
   // 팔로잉 이벤트
   const handleFollow = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -53,6 +60,22 @@ const FollowingBox = ({ post }: FollowingProps) => {
           { merge: true }
         );
 
+        if (user?.uid !== post?.uid) {
+          // 팔로우 알림 만들기
+          await addDoc(collection(db, "notifications"), {
+            createdAt: new Date()?.toLocaleDateString("ko", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+            uid: post?.uid,
+            isRead: false,
+            url: "#",
+            content: `${
+              user?.email || user?.displayName
+            }이(가) 회원님을 팔로우 했습니다.`,
+          });
+        }
         toast.success("팔로우 하였습니다.");
       }
     } catch (err) {}
